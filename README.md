@@ -1,6 +1,6 @@
-# Holbertonschool HBnB – UML Deliverables
+# Holbertonschool HBnB Project
 
-This repository contains the UML documentation for the HBnB project (Holberton). Diagrams are written in Mermaid and organized under `part1/`.
+This repository contains the UML documentation for the HBnB project (Holberton). Diagrams are written in Mermaid and organized under `part1/`. As the project progresses, this repo will grow to include additional design artifacts and implementation work beyond UML.
 
 ## Repository Structure
 - `part1/` – all Part 1 UML assets.
