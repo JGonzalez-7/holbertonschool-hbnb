@@ -15,7 +15,7 @@ This part brings the HBnB architecture from Part 1 to life using Flask and Flask
 
 ## Quickstart
 ```bash
-cd part2/hbnb
+cd part2
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 export FLASK_APP=run.py
@@ -37,5 +37,5 @@ API docs available at `http://localhost:8000/api/docs`.
 - Deletes are limited by task scope (only reviews have API delete).
 
 ## Testing
-- Automated: `pytest` from `part2/hbnb` (uses Flask test client, in-memory data).
+- Automated: `pytest` from `part2` (uses Flask test client, in-memory data).
 - Manual: use `curl` or Swagger UI at `http://localhost:8000/api/docs`.
