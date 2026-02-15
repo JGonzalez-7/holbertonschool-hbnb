@@ -16,7 +16,7 @@ This part brings the HBnB architecture from Part 1 to life using Flask and Flask
 ## Quickstart
 ```bash
 cd part2
-python -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 export FLASK_APP=run.py
 flask run --host=0.0.0.0 --port=8000
