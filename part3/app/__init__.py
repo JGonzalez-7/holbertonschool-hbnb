@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from config import config as config_map
 from flask import Flask
 from flask_bcrypt import Bcrypt
@@ -30,6 +32,7 @@ def create_app(config_object: str | type | None = None) -> Flask:
     from app.services import HBnBFacade
 
     app = Flask(__name__, instance_relative_config=True)
+    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
     app.config.from_object(_resolve_config(config_object))
     app.url_map.strict_slashes = False
 
