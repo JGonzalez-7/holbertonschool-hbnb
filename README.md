@@ -26,6 +26,7 @@ flask run --host=0.0.0.0 --port=8000
 ```
 Docs: `http://localhost:8000/api/docs`  
 Tests: `pytest`
+Exit the virtual environment with: `deactivate`
 
 ## Notes
 - Diagrams are text-based for version control friendliness.
