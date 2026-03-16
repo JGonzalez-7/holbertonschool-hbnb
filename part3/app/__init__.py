@@ -26,12 +26,21 @@ def _resolve_config(config_object: str | type | None) -> str | type:
 
 def create_app(config_object: str | type | None = None) -> Flask:
     """Create and configure the Flask application instance."""
+    from app.api import register_api
+    from app.services import HBnBFacade
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(_resolve_config(config_object))
+    app.url_map.strict_slashes = False
 
     bcrypt.init_app(app)
     jwt.init_app(app)
     db.init_app(app)
+    app.extensions["facade"] = HBnBFacade()
+    register_api(app)
+
+    with app.app_context():
+        db.create_all()
 
     return app
 
