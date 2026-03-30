@@ -2,6 +2,14 @@ import { api } from "./api.js";
 
 let allPlaces = [];
 
+function formatRating(value) {
+  if (Number.isInteger(value)) {
+    return String(value);
+  }
+
+  return value.toFixed(1);
+}
+
 function renderPlaces(places) {
   const list = document.querySelector("#places-list");
   if (!list) {
@@ -23,21 +31,33 @@ function renderPlaces(places) {
     const ratingLabel =
       place.average_rating === null || place.average_rating === undefined
         ? "No ratings yet"
-        : `${place.average_rating.toFixed(1)} / 5`;
+        : `${formatRating(place.average_rating)} / 5`;
+    const demoLabel = place.is_demo
+      ? '<span class="muted demo-label">Demo listing</span>'
+      : "";
+    const imageMarkup = place.image_url
+      ? `
+        <div class="property-media">
+          <img src="${place.image_url}" alt="${place.name}">
+        </div>
+      `
+      : "";
 
     card.innerHTML = `
+      ${imageMarkup}
       <header>
         <div>
           <h3>${place.name}</h3>
           <p class="muted">${place.description || "No description provided."}</p>
         </div>
-        <span class="price-badge">$${place.price.toFixed(2)} per night</span>
+        <span class="price-text">$${place.price.toFixed(2)} per night</span>
       </header>
       <div class="detail-meta">
         <span class="rating-badge">${ratingLabel}</span>
         <span class="muted">${place.reviews.length} review(s)</span>
       </div>
       <p class="muted">Lat ${place.latitude}, Lng ${place.longitude}</p>
+      ${demoLabel}
       <p><a class="details-button" href="/place.html?id=${place.id}">View Details</a></p>
     `;
 

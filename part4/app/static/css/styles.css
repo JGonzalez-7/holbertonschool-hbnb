@@ -83,30 +83,28 @@ select {
 
 .brand {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 0.85rem;
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text);
-  padding: 0.35rem 0.55rem 0.35rem 0.4rem;
+  justify-content: center;
+  padding: 0.2rem 0.3rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(9, 24, 13, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .logo {
   width: auto;
-  height: 44px;
-  max-width: 150px;
+  height: 54px;
+  max-width: 200px;
   display: block;
   object-fit: contain;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(232, 255, 69, 0.18), rgba(212, 239, 59, 0.08));
-  padding: 0.35rem 0.6rem;
+  background: linear-gradient(180deg, rgba(166, 201, 135, 0.95), rgba(126, 161, 101, 0.94));
+  padding: 0.35rem 0.95rem;
   box-shadow:
-    inset 0 0 0 1px rgba(232, 255, 69, 0.14),
-    0 10px 20px rgba(7, 16, 9, 0.18);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 10px 20px rgba(7, 16, 9, 0.14);
 }
 
 .site-nav {
@@ -341,6 +339,31 @@ select {
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
+.property-media,
+.property-hero {
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.property-media img,
+.property-hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-media {
+  aspect-ratio: 16 / 10;
+}
+
+.property-hero {
+  aspect-ratio: 16 / 9;
+}
+
 .place-card:hover,
 .review-card:hover {
   transform: translateY(-4px);
@@ -367,7 +390,6 @@ select {
   gap: 1rem;
 }
 
-.price-badge,
 .rating-badge,
 .pill,
 .details-button {
@@ -379,6 +401,12 @@ select {
   background: rgba(232, 255, 69, 0.12);
   color: var(--accent);
   font-size: 0.92rem;
+}
+
+.price-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
 }
 
 .details-button {
@@ -397,6 +425,12 @@ select {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
+}
+
+.demo-label {
+  display: inline-flex;
+  margin: 0.2rem 0 0.8rem;
+  color: var(--accent);
 }
 
 .place-layout {
@@ -524,12 +558,12 @@ select {
   }
 
   .brand {
-    font-size: 1.45rem;
+    padding: 0.18rem 0.28rem;
   }
 
   .logo {
-    height: 38px;
-    max-width: 128px;
+    height: 46px;
+    max-width: 168px;
   }
 
   .page-shell {

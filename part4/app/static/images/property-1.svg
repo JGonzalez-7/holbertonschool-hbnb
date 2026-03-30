@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">Canopy Loft Retreat</title>
+  <desc id="desc">Stylized hillside property with trees, loft windows, and a sunrise palette.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f9d98c"/>
+      <stop offset="55%" stop-color="#f4b483"/>
+      <stop offset="100%" stop-color="#5d7b4a"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#6b8d55"/>
+      <stop offset="100%" stop-color="#345234"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="600" fill="url(#sky)"/>
+  <circle cx="760" cy="110" r="58" fill="#fff3c2" opacity="0.9"/>
+  <path d="M0 430C143 380 246 374 375 420s239 62 359 15 170-49 226-21V600H0z" fill="url(#hill)"/>
+  <path d="M110 470C234 429 365 444 480 492s195 48 370-3V600H110z" fill="#284726" opacity="0.75"/>
+  <g transform="translate(314 206)">
+    <rect x="0" y="90" width="290" height="166" rx="12" fill="#e8d9bc"/>
+    <path d="M-18 104 145-4 312 104v28H-18z" fill="#85553c"/>
+    <rect x="34" y="126" width="58" height="92" rx="6" fill="#5f7259"/>
+    <rect x="118" y="126" width="64" height="54" rx="6" fill="#b0d9c8"/>
+    <rect x="198" y="126" width="64" height="54" rx="6" fill="#b0d9c8"/>
+    <rect x="118" y="192" width="144" height="26" rx="4" fill="#f5efe6"/>
+    <rect x="216" y="228" width="30" height="28" rx="3" fill="#d7c1a0"/>
+  </g>
+  <g fill="#294526">
+    <circle cx="168" cy="284" r="48"/>
+    <rect x="160" y="284" width="16" height="80" rx="8"/>
+    <circle cx="126" cy="320" r="38"/>
+    <circle cx="212" cy="330" r="42"/>
+    <circle cx="736" cy="276" r="54"/>
+    <rect x="726" y="276" width="18" height="90" rx="9"/>
+    <circle cx="692" cy="316" r="40"/>
+    <circle cx="786" cy="332" r="44"/>
+  </g>
+</svg>

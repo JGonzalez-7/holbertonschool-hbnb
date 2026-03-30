@@ -4,6 +4,14 @@ import { flash, getCookie } from "./auth.js";
 let currentPlace = null;
 let currentToken = null;
 
+function formatRating(value) {
+  if (Number.isInteger(value)) {
+    return String(value);
+  }
+
+  return value.toFixed(1);
+}
+
 function getPlaceIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
@@ -21,11 +29,20 @@ function renderPlace(place) {
   const ratingLabel =
     place.average_rating === null || place.average_rating === undefined
       ? "No ratings yet"
-      : `${place.average_rating.toFixed(1)} / 5`;
+      : `${formatRating(place.average_rating)} / 5`;
 
   container.innerHTML = `
     <p class="eyebrow">Place</p>
     <h1>${place.name}</h1>
+    ${
+      place.image_url
+        ? `
+          <div class="property-hero">
+            <img src="${place.image_url}" alt="${place.name}">
+          </div>
+        `
+        : ""
+    }
     <div class="place-info">
       <p class="intro">${place.description || "No description provided."}</p>
       <div class="detail-meta">
@@ -77,6 +94,12 @@ function updateReviewAccess(place) {
   if (!currentToken) {
     addReviewSection.hidden = true;
     note.textContent = "Sign in to leave a review.";
+    return;
+  }
+
+  if (place.is_demo) {
+    addReviewSection.hidden = true;
+    note.textContent = "Demo listings are view-only and do not accept new reviews.";
     return;
   }
 

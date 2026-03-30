@@ -6,6 +6,7 @@ from typing import Any
 
 from flask import Blueprint, current_app, jsonify, request
 
+from app.demo_data import get_demo_place, get_demo_user, list_demo_places
 from app.services.backend import BackendClient, BackendClientError, BackendResponse
 
 api_bp = Blueprint("api_proxy", __name__, url_prefix="/api")
@@ -130,13 +131,23 @@ def logout():
 @api_bp.get("/places")
 def list_places():
     """Proxy the public places listing."""
-    return _proxy_response(_backend_client().request("GET", "/places/"))
+    response = _backend_client().request("GET", "/places/")
+    if response.status_code != 200:
+        return _proxy_response(response)
+
+    places = response.payload if isinstance(response.payload, list) else []
+    return jsonify(places + list_demo_places())
 
 
 @api_bp.get("/places/<string:place_id>")
 def get_place(place_id: str):
     """Proxy a public place detail request."""
-    return _proxy_response(_backend_client().request("GET", f"/places/{place_id}"))
+    response = _backend_client().request("GET", f"/places/{place_id}")
+    if response.status_code == 404:
+        demo_place = get_demo_place(place_id)
+        if demo_place is not None:
+            return jsonify(demo_place)
+    return _proxy_response(response)
 
 
 @api_bp.get("/amenities")
@@ -148,7 +159,12 @@ def list_amenities():
 @api_bp.get("/users/<string:user_id>")
 def get_user(user_id: str):
     """Proxy a public user detail request."""
-    return _proxy_response(_backend_client().request("GET", f"/users/{user_id}"))
+    response = _backend_client().request("GET", f"/users/{user_id}")
+    if response.status_code == 404:
+        demo_user = get_demo_user(user_id)
+        if demo_user is not None:
+            return jsonify(demo_user)
+    return _proxy_response(response)
 
 
 @api_bp.post("/reviews")

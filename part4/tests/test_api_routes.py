@@ -41,6 +41,7 @@ def test_public_places_are_proxied(client):
     assert response.status_code == 200
     payload = response.get_json()
     assert payload[0]["name"] == "Coastal Loft"
+    assert any(place["id"] == "demo-place-1" for place in payload)
 
 
 def test_public_user_detail_is_proxied(client):
@@ -48,6 +49,16 @@ def test_public_user_detail_is_proxied(client):
 
     assert response.status_code == 200
     assert response.get_json()["first_name"] == "Casey"
+
+
+def test_demo_place_and_demo_user_are_available(client):
+    place_response = client.get("/api/places/demo-place-1")
+    user_response = client.get("/api/users/demo-user-1")
+
+    assert place_response.status_code == 200
+    assert place_response.get_json()["name"] == "Canopy Loft Retreat"
+    assert user_response.status_code == 200
+    assert user_response.get_json()["first_name"] == "Nina"
 
 
 def test_review_submission_requires_authentication(client):
