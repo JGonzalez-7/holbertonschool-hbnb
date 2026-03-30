@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }} | HBnB</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  </head>
+  <body data-page="{{ page_name }}">
+    <header class="site-header">
+      <a class="brand" href="{{ url_for('web.index') }}">
+        <img
+          class="logo"
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="HBnB logo"
+        >
+        <span>HBnB</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="{{ url_for('web.index') }}">Home</a>
+        <a href="{{ url_for('web.login') }}">Login</a>
+        <a id="login-link" class="login-button" href="{{ url_for('web.login') }}">Sign In</a>
+        <button id="logout-button" class="login-button" type="button" hidden>Logout</button>
+      </nav>
+    </header>
+
+    <div class="status-bar">
+      <span id="auth-status">Checking session...</span>
+    </div>
+
+    <main class="page-shell">
+      {% block content %}{% endblock %}
+    </main>
+
+    <div id="flash-message" class="flash-message" hidden></div>
+
+    <footer class="site-footer">
+      <p>All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

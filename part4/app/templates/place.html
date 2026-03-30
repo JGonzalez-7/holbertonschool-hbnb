@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="place-page" class="place-layout">
+  <article id="place-details" class="panel place-details">
+    <p class="muted">Loading place details...</p>
+  </article>
+
+  <aside class="panel review-panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Reviews</p>
+        <h2>Guest feedback</h2>
+      </div>
+      <p id="review-form-note" class="muted">Checking review permissions...</p>
+    </div>
+
+    <section id="add-review" class="add-review" hidden>
+      <h3>Add Review</h3>
+      <form id="review-form" class="form stacked-form">
+        <label class="field">
+          <span>Rating</span>
+          <select name="rating" required>
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Solid</option>
+            <option value="2">2 - Weak</option>
+            <option value="1">1 - Poor</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Comment</span>
+          <textarea id="review-text" name="comment" rows="4" maxlength="500" required></textarea>
+        </label>
+
+        <button class="primary-button" type="submit">Submit Review</button>
+      </form>
+    </section>
+
+    <section id="reviews" class="review-list" aria-label="Reviews list">
+      <p class="muted">Loading reviews...</p>
+    </section>
+  </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/place.js') }}"></script>
+{% endblock %}

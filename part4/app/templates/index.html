@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">HBnB Web Client</p>
+  <h1>Find places worth staying in.</h1>
+  <p class="intro">
+    Browse places from the Part 3 API, filter them in the browser, and open any listing
+    to inspect amenities, ratings, and reviews.
+  </p>
+</section>
+
+<section class="panel" id="places-page">
+  <div class="panel-header">
+    <div>
+      <h2>Available Places</h2>
+      <p>Use the price filter to narrow the list.</p>
+    </div>
+    <section id="filter" class="filter-grid">
+      <label class="field">
+        <span>Price Filter</span>
+        <select id="price-filter">
+          <option value="10">10</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="all">All</option>
+        </select>
+      </label>
+    </section>
+  </div>
+
+  <section id="places-list" class="card-grid" aria-label="Places list">
+    <p class="muted">Loading places...</p>
+  </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

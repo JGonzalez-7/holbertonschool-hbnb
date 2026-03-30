@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel add-review">
+  <p class="eyebrow">Add Review</p>
+  <h1>Share your stay experience</h1>
+  <p class="intro">
+    Submit a review for this place. Reviews are only available to authenticated users.
+  </p>
+
+  <form id="review-form" class="form stacked-form">
+    <label class="field">
+      <span>Rating</span>
+      <select name="rating" required>
+        <option value="5">5 - Excellent</option>
+        <option value="4">4 - Good</option>
+        <option value="3">3 - Solid</option>
+        <option value="2">2 - Weak</option>
+        <option value="1">1 - Poor</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Comment</span>
+      <textarea id="review" name="comment" rows="5" maxlength="500" required></textarea>
+    </label>
+
+    <div class="form-actions">
+      <button class="primary-button" type="submit">Submit Review</button>
+      <a id="back-to-place" class="details-button" href="{{ url_for('web.index') }}">Back to Place</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/add_review.js') }}"></script>
+{% endblock %}

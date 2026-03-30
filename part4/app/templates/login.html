@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="auth-panel">
+  <div class="panel">
+    <p class="eyebrow">Authentication</p>
+    <h1>Sign in to HBnB</h1>
+    <p class="intro">
+      Use an account from the Part 3 backend. A successful login stores the JWT token in
+      a browser cookie for session management.
+    </p>
+
+    <form id="login-form" class="stacked-form">
+      <label class="field">
+        <span>Email</span>
+        <input name="email" type="email" autocomplete="email" required>
+      </label>
+
+      <label class="field">
+        <span>Password</span>
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+
+      <button class="primary-button" type="submit">Sign In</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
