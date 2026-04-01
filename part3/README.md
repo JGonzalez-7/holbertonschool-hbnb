@@ -16,12 +16,15 @@ Starter structure for the Part 3 backend, focused on authentication and database
 
 ## Quickstart
 ```bash
-cd part3/hbnb
+cd part3
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+export FLASK_APP=run.py
 flask run --host=0.0.0.0 --port=8000
 ```
+
+API docs: `http://127.0.0.1:8000/api/docs`
 
 ## SQLAlchemy Repository
 Part 3 now includes a repository layer in `app/persistence/repository.py` and a facade in `app/services/facade.py`.

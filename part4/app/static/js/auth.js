@@ -27,15 +27,17 @@ function flash(message) {
 }
 
 function updateNavigation(session) {
+  const adminLink = document.querySelector("#admin-link");
   const loginLink = document.querySelector("#login-link");
   const logoutButton = document.querySelector("#logout-button");
   const authStatus = document.querySelector("#auth-status");
 
-  if (!loginLink || !logoutButton || !authStatus) {
+  if (!loginLink || !logoutButton || !authStatus || !adminLink) {
     return;
   }
 
   if (session && session.logged_in) {
+    adminLink.hidden = !session.is_admin;
     loginLink.hidden = true;
     logoutButton.hidden = false;
     authStatus.textContent = session.is_admin
@@ -44,6 +46,7 @@ function updateNavigation(session) {
     return;
   }
 
+  adminLink.hidden = true;
   loginLink.hidden = false;
   logoutButton.hidden = true;
   authStatus.textContent = "Browsing as guest";

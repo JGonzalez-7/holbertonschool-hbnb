@@ -67,3 +67,30 @@ def test_legacy_add_review_route_redirects_to_query_style_url(client):
 
     assert response.status_code == 302
     assert response.headers["Location"].endswith("/add_review.html?id=place-1")
+
+
+def test_admin_users_redirects_when_not_authenticated(client):
+    response = client.get("/admin/users")
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/index.html")
+
+
+def test_admin_users_redirects_when_not_admin(client):
+    client.set_cookie("token", "token-123")
+
+    response = client.get("/admin/users")
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/index.html")
+
+
+def test_admin_users_page_renders_for_administrator(client):
+    client.set_cookie("token", "token-admin")
+
+    response = client.get("/admin/users")
+    body = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Create backend users" in body
+    assert 'id="admin-user-form"' in body

@@ -2,9 +2,32 @@
 
 from __future__ import annotations
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, redirect, render_template, request, url_for
+
+from app.services.backend import BackendResponse
 
 web_bp = Blueprint("web", __name__)
+
+
+def _session_payload() -> dict[str, object]:
+    token = request.cookies.get("token", "").strip()
+    if not token:
+        return {"logged_in": False, "is_admin": False, "user_id": None}
+
+    backend_client = current_app.extensions.get("backend_client")
+    if backend_client is None:
+        return {"logged_in": False, "is_admin": False, "user_id": None}
+
+    response = backend_client.request("GET", "/auth/protected", token=token)
+    if not isinstance(response, BackendResponse) or response.status_code != 200:
+        return {"logged_in": False, "is_admin": False, "user_id": None}
+
+    payload = response.payload or {}
+    return {
+        "logged_in": True,
+        "is_admin": bool(payload.get("is_admin", False)),
+        "user_id": payload.get("user_id"),
+    }
 
 
 @web_bp.get("/")
@@ -50,6 +73,21 @@ def add_review():
 def add_review_legacy(place_id: str):
     """Support the legacy add review path."""
     return redirect(url_for("web.add_review", id=place_id))
+
+
+@web_bp.get("/admin/users")
+@web_bp.get("/admin/users.html")
+def admin_users():
+    """Render the administrator user management page."""
+    session = _session_payload()
+    if not session["logged_in"] or not session["is_admin"]:
+        return redirect(url_for("web.index"))
+
+    return render_template(
+        "admin_users.html",
+        page_name="admin-users",
+        page_title="Manage Users",
+    )
 
 
 __all__ = ["web_bp"]

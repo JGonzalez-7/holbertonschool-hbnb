@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import uuid
 
 
 DEMO_USERS = {
@@ -65,12 +66,12 @@ DEMO_USERS = {
 }
 
 
-DEMO_PLACES = [
+_DEMO_PLACES_TEMPLATE = [
     {
         "id": "demo-place-1",
         "name": "Canopy Loft Retreat",
         "description": "A calm hillside loft with leafy views, a reading nook, and a quiet terrace for slow mornings.",
-        "price": 95.0,
+        "price": 8.0,
         "latitude": 18.343,
         "longitude": -66.114,
         "owner_id": "demo-owner-1",
@@ -97,7 +98,7 @@ DEMO_PLACES = [
         "id": "demo-place-2",
         "name": "Old Town Courtyard House",
         "description": "A restored house near historic streets with a shaded courtyard and space for long weekend stays.",
-        "price": 140.0,
+        "price": 42.0,
         "latitude": 18.465,
         "longitude": -66.105,
         "owner_id": "demo-owner-2",
@@ -124,7 +125,7 @@ DEMO_PLACES = [
         "id": "demo-place-3",
         "name": "Ocean Glass Studio",
         "description": "Minimal studio with wide windows, a compact kitchen, and a strong sunset view over the water.",
-        "price": 180.0,
+        "price": 88.0,
         "latitude": 18.377,
         "longitude": -65.958,
         "owner_id": "demo-owner-3",
@@ -151,7 +152,7 @@ DEMO_PLACES = [
         "id": "demo-place-4",
         "name": "Garden Patio Bungalow",
         "description": "A low-key bungalow with an outdoor shower, garden seating, and easy access to beach roads.",
-        "price": 125.0,
+        "price": 135.0,
         "latitude": 18.309,
         "longitude": -65.298,
         "owner_id": "demo-owner-4",
@@ -170,7 +171,7 @@ DEMO_PLACES = [
         "id": "demo-place-5",
         "name": "City Roofline Apartment",
         "description": "A polished apartment with a rooftop corner, skyline views, and quick access to dining and nightlife.",
-        "price": 210.0,
+        "price": 220.0,
         "latitude": 18.447,
         "longitude": -66.066,
         "owner_id": "demo-owner-5",
@@ -195,6 +196,20 @@ DEMO_PLACES = [
     },
 ]
 
+DEMO_PLACES = deepcopy(_DEMO_PLACES_TEMPLATE)
+
+
+def _average_rating(reviews: list[dict]) -> float | None:
+    if not reviews:
+        return None
+    return sum(int(review["rating"]) for review in reviews) / len(reviews)
+
+
+def reset_demo_places() -> None:
+    """Restore demo places to their original seeded state."""
+    global DEMO_PLACES
+    DEMO_PLACES = deepcopy(_DEMO_PLACES_TEMPLATE)
+
 
 def list_demo_places() -> list[dict]:
     """Return demo places as independent dictionaries."""
@@ -209,6 +224,42 @@ def get_demo_place(place_id: str) -> dict | None:
     return None
 
 
+def add_demo_review(place_id: str, user_id: str, rating: int, comment: str) -> dict:
+    """Add a review to a demo place and return the created review."""
+    normalized_comment = comment.strip()
+    if not normalized_comment:
+        raise ValueError("comment is required")
+    if rating < 1 or rating > 5:
+        raise ValueError("rating must be between 1 and 5")
+
+    for place in DEMO_PLACES:
+        if place["id"] != place_id:
+            continue
+
+        if place["owner_id"] == user_id:
+            raise ValueError("You cannot review your own place")
+
+        existing_review = next(
+            (review for review in place["reviews"] if review["user_id"] == user_id),
+            None,
+        )
+        if existing_review is not None:
+            raise ValueError("You have already reviewed this place")
+
+        review = {
+            "id": f"demo-review-{uuid.uuid4()}",
+            "rating": int(rating),
+            "comment": normalized_comment,
+            "user_id": user_id,
+            "place_id": place_id,
+        }
+        place["reviews"].append(review)
+        place["average_rating"] = _average_rating(place["reviews"])
+        return deepcopy(review)
+
+    raise ValueError("Place not found")
+
+
 def get_demo_user(user_id: str) -> dict | None:
     """Return a demo user by id."""
     user = DEMO_USERS.get(user_id)
@@ -217,4 +268,10 @@ def get_demo_user(user_id: str) -> dict | None:
     return deepcopy(user)
 
 
-__all__ = ["get_demo_place", "get_demo_user", "list_demo_places"]
+__all__ = [
+    "add_demo_review",
+    "get_demo_place",
+    "get_demo_user",
+    "list_demo_places",
+    "reset_demo_places",
+]

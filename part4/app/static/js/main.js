@@ -78,7 +78,14 @@ function applyFilters() {
 
 async function loadPageData() {
   const places = await api.get("/api/places");
-  allPlaces = places;
+  allPlaces = [...places].sort((left, right) => {
+    const priceDelta = Number(left.price || 0) - Number(right.price || 0);
+    if (priceDelta !== 0) {
+      return priceDelta;
+    }
+
+    return String(left.name || "").localeCompare(String(right.name || ""));
+  });
   renderPlaces(allPlaces);
   applyFilters();
 }

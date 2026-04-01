@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="admin-layout">
+  <article class="panel admin-panel">
+    <p class="eyebrow">Administrator</p>
+    <h1>Create backend users</h1>
+    <p class="intro">
+      Use this form to create accounts in the Part 3 API. This action is restricted to
+      administrator sessions.
+    </p>
+
+    <form id="admin-user-form" class="stacked-form">
+      <div class="split-fields">
+        <label class="field">
+          <span>First name</span>
+          <input name="first_name" type="text" maxlength="50" required>
+        </label>
+
+        <label class="field">
+          <span>Last name</span>
+          <input name="last_name" type="text" maxlength="50" required>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Email</span>
+        <input name="email" type="email" autocomplete="email" required>
+      </label>
+
+      <label class="field">
+        <span>Password</span>
+        <input name="password" type="password" minlength="8" required>
+      </label>
+
+      <label class="checkbox-field">
+        <input name="is_admin" type="checkbox">
+        <span>Grant administrator access</span>
+      </label>
+
+      <div class="form-actions">
+        <button class="primary-button" type="submit">Create User</button>
+      </div>
+    </form>
+  </article>
+
+  <aside class="panel admin-result-panel">
+    <p class="eyebrow">Result</p>
+    <h2>Latest created user</h2>
+    <div id="created-user-state" class="muted">No users created from this page yet.</div>
+    <dl id="created-user-details" class="detail-list" hidden>
+      <div>
+        <dt>Name</dt>
+        <dd id="created-user-name"></dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd id="created-user-email"></dd>
+      </div>
+      <div>
+        <dt>User ID</dt>
+        <dd id="created-user-id"></dd>
+      </div>
+      <div>
+        <dt>Role</dt>
+        <dd id="created-user-role"></dd>
+      </div>
+    </dl>
+  </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/admin_users.js') }}"></script>
+{% endblock %}

@@ -33,6 +33,8 @@ class FakeBackendClient:
         if method == "POST" and path == "/auth/login":
             if json == {"email": "user@example.com", "password": "secret123"}:
                 return BackendResponse(200, {"access_token": "token-123"})
+            if json == {"email": "admin@hbnb.io", "password": "admin1234"}:
+                return BackendResponse(200, {"access_token": "token-admin"})
             return BackendResponse(401, {"message": "Invalid email or password"})
 
         if method == "GET" and path == "/auth/protected" and token == "token-123":
@@ -42,6 +44,16 @@ class FakeBackendClient:
                     "message": "Access granted",
                     "user_id": "user-1",
                     "is_admin": False,
+                },
+            )
+
+        if method == "GET" and path == "/auth/protected" and token == "token-admin":
+            return BackendResponse(
+                200,
+                {
+                    "message": "Access granted",
+                    "user_id": "admin-1",
+                    "is_admin": True,
                 },
             )
 
@@ -132,6 +144,21 @@ class FakeBackendClient:
                     "place_id": json["place_id"],
                 },
             )
+
+        if method == "POST" and path == "/users/" and token == "token-admin":
+            return BackendResponse(
+                201,
+                {
+                    "id": "user-created-1",
+                    "first_name": json["first_name"],
+                    "last_name": json["last_name"],
+                    "email": json["email"],
+                    "is_admin": bool(json.get("is_admin", False)),
+                },
+            )
+
+        if method == "POST" and path == "/users/":
+            return BackendResponse(403, {"message": "Administrator access required"})
 
         return BackendResponse(404, {"message": "Not found"})
 

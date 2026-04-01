@@ -54,19 +54,45 @@ Docs: `http://localhost:8000/api/docs`
 Tests: `pytest`
 
 ### Part 4
-Start Part 3 first, then in a second terminal:
+Run the backend and frontend in separate terminals.
+
+Backend terminal:
+
+```bash
+cd part3
+source venv/bin/activate
+export FLASK_APP=run.py
+flask run --host=0.0.0.0 --port=8000
+```
+
+Frontend terminal:
 
 ```bash
 cd part4
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+source .venv/bin/activate
 export FLASK_APP=run.py
 export BACKEND_API_URL=http://127.0.0.1:8000/api/v1
 flask run --host=0.0.0.0 --port=5001
 ```
 
+Backend API: `http://127.0.0.1:8000/api/v1/places/`
+Backend docs: `http://127.0.0.1:8000/api/docs`
 Web client: `http://127.0.0.1:5001`
 Tests: `pytest`
+
+If the virtual environments do not exist yet:
+
+```bash
+cd part3
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+cd ../part4
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Notes
 - Diagrams are text-based for version control friendliness.

@@ -17,8 +17,9 @@
         >
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="{{ url_for('web.index') }}">Home</a>
-        <a href="{{ url_for('web.login') }}">Login</a>
+        <a class="nav-link" href="{{ url_for('web.index') }}">Home</a>
+        <a class="nav-link" href="{{ url_for('web.login') }}">Login</a>
+        <a id="admin-link" class="nav-link" href="{{ url_for('web.admin_users') }}" hidden>Admin</a>
         <a id="login-link" class="login-button" href="{{ url_for('web.login') }}">Sign In</a>
         <button id="logout-button" class="login-button" type="button" hidden>Logout</button>
       </nav>

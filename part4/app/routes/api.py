@@ -6,10 +6,20 @@ from typing import Any
 
 from flask import Blueprint, current_app, jsonify, request
 
-from app.demo_data import get_demo_place, get_demo_user, list_demo_places
 from app.services.backend import BackendClient, BackendClientError, BackendResponse
 
 api_bp = Blueprint("api_proxy", __name__, url_prefix="/api")
+
+BACKEND_PLACE_IMAGE_BY_NAME = {
+    "Canopy Loft Retreat": "/static/images/canopy_loft_retreat.jpg",
+    "Old Town Courtyard House": "/static/images/old_town_courtyard_house.jpg",
+    "Ocean Glass Studio": "/static/images/ocean_glass_studio.jpg",
+    "Garden Patio Bungalow": "/static/images/garden_patio_bungalow.jpg",
+    "City Roofline Apartment": "/static/images/city_roofline_apartment.jpg",
+    "San Juan Harbor Flat": "/static/images/san_juan_harbor_flat.jpg",
+    "Rainforest Edge Cabin": "/static/images/rainforest_edge_cabin.jpg",
+    "Sunset Pool House": "/static/images/sunset_pool_house.jpg",
+}
 
 
 def _backend_client() -> BackendClient:
@@ -36,6 +46,22 @@ def _anonymous_session_payload() -> dict[str, Any]:
     }
 
 
+def _authenticated_session_payload(token: str | None) -> dict[str, Any] | None:
+    if token is None:
+        return None
+
+    response = _backend_client().request("GET", "/auth/protected", token=token)
+    if response.status_code != 200:
+        return None
+
+    payload = response.payload or {}
+    return {
+        "logged_in": True,
+        "user_id": payload.get("user_id"),
+        "is_admin": bool(payload.get("is_admin", False)),
+    }
+
+
 def _json_error(message: str, status_code: int):
     return jsonify({"message": message}), status_code
 
@@ -55,6 +81,13 @@ def _proxy_response(response: BackendResponse):
     return jsonify(payload), response.status_code
 
 
+def _attach_backend_place_image(place: dict[str, Any]) -> dict[str, Any]:
+    image_url = BACKEND_PLACE_IMAGE_BY_NAME.get(str(place.get("name", "")).strip())
+    if image_url and not place.get("image_url"):
+        place = {**place, "image_url": image_url}
+    return place
+
+
 @api_bp.errorhandler(BackendClientError)
 def handle_backend_error(error: BackendClientError):
     """Return a gateway-style response when the backend cannot be reached."""
@@ -65,21 +98,10 @@ def handle_backend_error(error: BackendClientError):
 def get_session_state():
     """Return the current web client session state."""
     token = _get_token_from_cookie()
-    if token is None:
+    session = _authenticated_session_payload(token)
+    if session is None:
         return jsonify(_anonymous_session_payload())
-
-    response = _backend_client().request("GET", "/auth/protected", token=token)
-    if response.status_code != 200:
-        return jsonify(_anonymous_session_payload())
-
-    payload = response.payload or {}
-    return jsonify(
-        {
-            "logged_in": True,
-            "user_id": payload.get("user_id"),
-            "is_admin": bool(payload.get("is_admin", False)),
-        }
-    )
+    return jsonify(session)
 
 
 @api_bp.post("/session/login")
@@ -136,17 +158,20 @@ def list_places():
         return _proxy_response(response)
 
     places = response.payload if isinstance(response.payload, list) else []
-    return jsonify(places + list_demo_places())
+    places = [
+        _attach_backend_place_image(place)
+        for place in places
+        if isinstance(place, dict)
+    ]
+    return jsonify(places)
 
 
 @api_bp.get("/places/<string:place_id>")
 def get_place(place_id: str):
     """Proxy a public place detail request."""
     response = _backend_client().request("GET", f"/places/{place_id}")
-    if response.status_code == 404:
-        demo_place = get_demo_place(place_id)
-        if demo_place is not None:
-            return jsonify(demo_place)
+    if response.status_code == 200 and isinstance(response.payload, dict):
+        return jsonify(_attach_backend_place_image(response.payload))
     return _proxy_response(response)
 
 
@@ -159,12 +184,7 @@ def list_amenities():
 @api_bp.get("/users/<string:user_id>")
 def get_user(user_id: str):
     """Proxy a public user detail request."""
-    response = _backend_client().request("GET", f"/users/{user_id}")
-    if response.status_code == 404:
-        demo_user = get_demo_user(user_id)
-        if demo_user is not None:
-            return jsonify(demo_user)
-    return _proxy_response(response)
+    return _proxy_response(_backend_client().request("GET", f"/users/{user_id}"))
 
 
 @api_bp.post("/reviews")
@@ -179,6 +199,24 @@ def create_review():
         _backend_client().request(
             "POST",
             "/reviews/",
+            token=str(access_token),
+            json=payload,
+        )
+    )
+
+
+@api_bp.post("/users")
+def create_user():
+    """Proxy administrator-only user creation using the session token."""
+    access_token = _get_token_from_cookie()
+    if not access_token:
+        return _json_error("Authentication required", 401)
+
+    payload = request.get_json(silent=True) or {}
+    return _proxy_response(
+        _backend_client().request(
+            "POST",
+            "/users/",
             token=str(access_token),
             json=payload,
         )

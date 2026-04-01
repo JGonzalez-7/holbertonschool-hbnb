@@ -97,12 +97,6 @@ function updateReviewAccess(place) {
     return;
   }
 
-  if (place.is_demo) {
-    addReviewSection.hidden = true;
-    note.textContent = "Demo listings are view-only and do not accept new reviews.";
-    return;
-  }
-
   if (place.owner_id === place.current_user_id) {
     addReviewSection.hidden = true;
     note.textContent = "Owners cannot review their own places.";
